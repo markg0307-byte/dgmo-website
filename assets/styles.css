@@ -60,7 +60,7 @@ h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.01em;margin-top:14px}
 .tier{border-left:3px solid var(--amber);padding:4px 0 4px 20px;margin-bottom:22px}
 .tier:last-child{margin-bottom:0}
 .tier h3{font-size:18px}
-.tier .price{color:var(--amber);font-weight:700}
+.tier .price{color:var(--muted);font-weight:400}
 .tier p{color:var(--muted);font-size:14.5px;margin-top:4px}
 
 .steps{counter-reset:s}
