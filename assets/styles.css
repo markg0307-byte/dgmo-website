@@ -84,3 +84,14 @@ h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.01em;margin-top:14px}
 
 @media(max-width:860px){.g3,.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.g3,.g4,.g2{grid-template-columns:1fr}.hero{padding:56px 0 40px}section{padding:44px 0}.band{padding:30px}nav .links{gap:16px}.hero .curves{display:none}}
+
+/* --- layout guards ------------------------------------------------------ */
+/* The hero curve is an SVG with an intrinsic 1000x320 ratio and only a height
+   set inline, so width:auto resolved from that ratio and pushed the page
+   sideways at every desktop width. Pin it to the container. */
+.hero .curves{width:100%;max-width:100%}
+/* Nav links did not wrap, overflowing narrow phones. Drop them to their own row. */
+@media(max-width:620px){
+  nav{flex-wrap:wrap;row-gap:14px}
+  nav .links{flex-wrap:wrap;width:100%;gap:14px;row-gap:10px}
+}
