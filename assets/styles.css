@@ -1,6 +1,7 @@
 :root{
   --bg:#12161C; --card:#1B222B; --card2:#202934; --border:#2A3441;
   --ink:#F3F5F7; --muted:#8D97A5; --amber:#F2A33C; --red:#E5484D; --green:#3DBF7F;
+  --shu:#E2472B;   /* the limit — never a button, link, heading or hover state */
   --b1:#24435F; --b2:#33608A; --b3:#4A82B4;
   --sans:-apple-system,"Segoe UI",Arial,"Helvetica Neue",Helvetica,sans-serif;
 }
@@ -13,8 +14,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offs
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 
 /* the ceiling — breachline across every page */
-.ceiling{position:relative;height:6px;background:var(--amber)}
-.ceiling::after{content:"";position:absolute;right:24px;top:-9px;width:24px;height:24px;background:var(--amber);transform:rotate(45deg)}
+.ceiling{position:relative;height:6px;background:var(--shu)}
+.ceiling::after{content:"";position:absolute;right:24px;top:-9px;width:24px;height:24px;background:var(--shu);transform:rotate(45deg)}
 
 nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0 0}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.22em;font-size:13px}
@@ -74,8 +75,8 @@ h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.01em;margin-top:14px}
 
 /* headroom lockup */
 .lockup{margin:10px 0 8px}
-.lockup .line{position:relative;height:5px;background:var(--amber);width:min(560px,86%);border-radius:3px}
-.lockup .line::after{content:"";position:absolute;right:-10px;top:-8px;width:20px;height:20px;background:var(--amber);transform:rotate(45deg)}
+.lockup .line{position:relative;height:5px;background:var(--shu);width:min(560px,86%);border-radius:3px}
+.lockup .line::after{content:"";position:absolute;right:-10px;top:-8px;width:20px;height:20px;background:var(--shu);transform:rotate(45deg)}
 .lockup .word{font-size:clamp(44px,8vw,84px);font-weight:800;letter-spacing:.16em;line-height:1;margin-top:26px}
 .lockup .sub{color:var(--muted);letter-spacing:.34em;font-size:12.5px;margin-top:12px}
 
