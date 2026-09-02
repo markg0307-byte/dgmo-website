@@ -49,7 +49,8 @@ const RULES = [
   { id: "breach", why: "'breach' is reserved for the product name and the officer-determination field",
     re: /\bbreach(es|ed|ing|line)?\b/gi },
   { id: "invented-ratio", why: "Invented ratio that presents as sourced (must carry provenance or be retired)",
-    re: /\b0\.565\b|\b0\.145\b|\b0\.42\s?(beds?|bed\s?spaces?)|\b0\.31\s?(gate|throughput|inductions?)|\b12\.5\s?m(²|2|\^2)\s?(laydown|per)|\b0\.22\s?(bus\s?)?seats?|\b0\.40\s?(canteen|covers?|seats?)/gi },
+    re: /\b0\.565\b|\b0\.145\b|\b0\.42\s?(beds?|bed\s?spaces?)|\b0\.31\s?(gate|throughput|inductions?)|\b12\.5\s?m(²|2|\^2)\s?(laydown|per)|\b0\.22\s?(bus\s?)?seats?|\b0\.40\s?(canteen|covers?|seats?)/gi,
+    guard: (m, line) => !/\bretired\b/i.test(line) },                           // docs may list them as retired
   { id: "email", why: "Email address other than the practice inbox",
     re: /\b(?!info@dgmoconsultancy\.com)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g },
   { id: "phone", why: "Phone number",
@@ -77,8 +78,10 @@ function mask(text) {
   return text
     .replace(/[A-Za-z0-9+/]{60,}={0,2}/g, (m) => "•".repeat(m.length))          // base64 blobs
     .replace(/The\s+Breach\s+Check/g, (m) => "•".repeat(m.length))               // permitted product name
-    .replace(/officer[-\s]determination[^<\n]{0,40}breach|breach[^<\n]{0,40}officer[-\s]determination/gi,
-      (m) => "•".repeat(m.length));                                              // permitted field label
+    .split(/\r?\n/)                                                              // permitted field: a line that names the
+    .map((line) => (/officer[-\s_]determination/i.test(line)                    // officer determination may say what
+      ? line.replace(/breach/gi, (m) => "•".repeat(m.length)) : line))          // it records
+    .join("\n");
 }
 
 function* walk(dir) {

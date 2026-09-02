@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Genkai — scenario demonstration (synthetic data)</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#12161C; --card:#1B222B; --card2:#202934; --border:#2A3441; --ink:#F3F5F7; --muted:#8D97A5;
+  --amber:#F2A33C; --red:#E5484D; --green:#3DBF7F; --blue:#4A82B4; --b1:#24435F; --b2:#33608A;
+  --shu:#E2472B; /* the limit — never a button, link, heading, badge or series */
+  --sans:-apple-system,"Segoe UI",Arial,"Helvetica Neue",Helvetica,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono","Consolas","SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.ceiling{height:6px;background:var(--shu);position:relative}
+.ceiling::after{content:"";position:absolute;right:24px;top:-9px;width:24px;height:24px;background:var(--shu);transform:rotate(45deg)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0 12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .word{font-weight:800;letter-spacing:.22em;font-size:16px}
+.brand .by{color:var(--muted);font-size:11px;letter-spacing:.24em;text-transform:uppercase}
+.syn{border:1px solid var(--amber);color:var(--amber);border-radius:999px;padding:6px 14px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);margin:8px 0 22px}
+nav.tabs button{background:none;border:0;color:var(--muted);font:inherit;font-size:13px;letter-spacing:.08em;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+nav.tabs button:hover{color:var(--ink)}
+.overline{display:flex;align-items:center;gap:10px;color:var(--amber);font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;margin-bottom:10px}
+.overline::before{content:"";width:8px;height:8px;background:var(--amber);transform:rotate(45deg)}
+h1{font-size:clamp(22px,3vw,32px);letter-spacing:-.01em;margin-bottom:18px}
+h2{font-size:18px;margin:26px 0 12px}
+h3{font-size:15px;margin-bottom:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1000px){.g4,.g5{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px}
+.card.flat{background:var(--card2)}
+.kpi .k{color:var(--muted);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.kpi .v{font-family:var(--mono);font-size:30px;margin:6px 0 2px}
+.kpi .s{color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.kpi .v.amber{color:var(--amber)}.kpi .v.red{color:var(--red)}
+.dom{border-left:3px solid var(--border);cursor:pointer}
+.dom:hover{border-color:var(--muted)}
+.dom.clear{border-left-color:var(--green)}.dom.watch{border-left-color:var(--blue)}.dom.decide{border-left-color:var(--amber)}.dom.reached{border-left-color:var(--red)}
+.dom .t{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dom .n{font-weight:700;font-size:15px}
+.dom .num{font-family:var(--mono);font-size:19px;margin:8px 0 2px}
+.dom .num small{color:var(--muted);font-size:12px}
+.dom .d{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.dom .d b{color:var(--ink);font-weight:600}
+.badge{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:1px solid var(--border);color:var(--muted);white-space:nowrap}
+.badge.clear{color:var(--green);border-color:var(--green)}.badge.watch{color:var(--blue);border-color:var(--blue)}.badge.decide{color:var(--amber);border-color:var(--amber)}.badge.reached{color:var(--red);border-color:var(--red)}
+.badge.flag{color:var(--amber);border-color:var(--amber)}
+.tag{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--border);border-radius:4px;padding:1px 6px;margin-left:6px}
+.prov{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border-radius:4px;padding:1px 6px;font-weight:700}
+.prov.statutory{background:#1f3a2a;color:var(--green)}.prov.observed{background:#1f2f45;color:#8fb8e8}.prov.assumed{background:#3a2c14;color:var(--amber)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.tbl{overflow-x:auto}
+input,select,textarea{background:var(--bg);border:1px solid var(--border);color:var(--ink);border-radius:6px;padding:7px 9px;font:inherit;font-size:13px;width:100%}
+input[readonly]{color:var(--muted);background:var(--card2)}
+textarea{font-family:var(--mono);font-size:12px;min-height:120px}
+label.f{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.field{margin-bottom:12px}
+.btn{display:inline-block;background:var(--card2);border:1px solid var(--border);color:var(--ink);border-radius:6px;padding:9px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--amber);color:#12161C;border-color:var(--amber)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chart{width:100%;height:auto;display:block}
+.note{color:var(--muted);font-size:12.5px;font-style:italic}
+.issue{padding:8px 10px;border-left:3px solid var(--border);margin-bottom:6px;font-size:13px;background:var(--card2);border-radius:0 6px 6px 0}
+.issue.block{border-left-color:var(--red)}.issue.warn{border-left-color:var(--amber)}.issue.info{border-left-color:var(--blue)}
+.issue .w{color:var(--muted);font-family:var(--mono);font-size:11.5px}
+.delta{font-family:var(--mono)}
+.delta.worse{color:var(--red)}.delta.better{color:var(--green)}
+.hidden{display:none!important}
+footer{border-top:1px solid var(--border);margin-top:40px;padding-top:18px;color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+/* ---- Retrospective report: light print palette, austere -------------- */
+#report{display:none}
+@media print{
+  body{background:#fff;color:#111}
+  .wrap>*:not(#report){display:none!important}
+  .ceiling{display:none}
+  #report{display:block;color:#111;font-size:11.5pt}
+  #report h1{font-size:20pt;margin:0 0 4pt}
+  #report h2{font-size:13pt;margin:16pt 0 6pt;color:#111}
+  #report .meta{color:#444;font-size:10pt;margin-bottom:12pt}
+  #report table{font-size:9.5pt}
+  #report th{color:#444;border-bottom:1px solid #999}
+  #report td{border-bottom:1px solid #ddd;padding:4pt 6pt}
+  #report .num{font-family:var(--mono)}
+  #report .fig{border:1px solid #ccc;padding:6pt;margin:6pt 0;page-break-inside:avoid}
+  #report .fig .cap{font-size:9pt;color:#444;margin-top:2pt}
+  #report .foot{margin-top:18pt;font-size:9pt;color:#444;border-top:1px solid #999;padding-top:6pt}
+}
+</style>
+</head>
+<body>
+<div class="ceiling" aria-hidden="true"></div>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <a href="/genkai/" style="text-decoration:none"><div class="word">GENKAI</div><div class="by">by DGMO Consultancy</div></a>
+  </div>
+  <div class="row">
+    <span class="syn" id="synBadge">● Synthetic demonstration data</span>
+    <button class="btn" id="resetBtn" title="Discard edits and reload the synthetic scenario">Reset</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+  <button role="tab" data-tab="domain">Domain</button>
+  <button role="tab" data-tab="consent">Consent layer</button>
+  <button role="tab" data-tab="concurrency">Concurrency</button>
+  <button role="tab" data-tab="rebase">What moved</button>
+  <button role="tab" data-tab="retro">Retrospective</button>
+  <button role="tab" data-tab="provenance">Provenance</button>
+  <button role="tab" data-tab="verify">Verify</button>
+</nav>
+
+<section id="tab-overview" data-panel></section>
+<section id="tab-domain" data-panel class="hidden"></section>
+<section id="tab-consent" data-panel class="hidden"></section>
+<section id="tab-concurrency" data-panel class="hidden"></section>
+<section id="tab-rebase" data-panel class="hidden"></section>
+<section id="tab-retro" data-panel class="hidden"></section>
+<section id="tab-provenance" data-panel class="hidden"></section>
+<section id="tab-verify" data-panel class="hidden"></section>
+
+<div id="report"></div>
+
+<footer>
+  <span>GENKAI · by DGMO Consultancy</span>
+  <span id="footStrap">DC-North Campus · a campus that does not exist</span>
+</footer>
+</div>
+
+<script type="module">
+import { SCENARIO, CONSENT_ROUTES, REMEDY_CONSENT, OFFICER_DETERMINATION_OPTIONS, sampleActualsCsv, sampleAccessControlCsv } from "./synthetic.js";
+import * as M from "./middleware.js";
+import { verify } from "./verify.js";
+import { scanText, summarise } from "./leakscan.js";
+
+// ------------------------------------------------------------- state -----
+const KEY = "genkai-scenario-v1";
+let S = load();
+let ui = { tab: "overview", domain: S.domains[0].id, retro: null, retroText: "" };
+
+function load() {
+  try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); if (o?.meta?.name) return o; } } catch (e) {}
+  return structuredClone(SCENARIO);
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function reset() { try { localStorage.removeItem(KEY); } catch (e) {} S = structuredClone(SCENARIO); ui.retro = null; render(); }
+
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const cls = (st) => ({ [M.STATUS.CLEAR]: "clear", [M.STATUS.WATCH]: "watch", [M.STATUS.DECIDE_PASSED]: "decide", [M.STATUS.REACHED]: "reached" }[st]);
+const provTag = (b) => `<span class="prov ${esc(b?.provenance)}">${esc(b?.provenance || "?")}</span>`;
+const provLine = (b) => `${provTag(b)} <span class="muted small">${esc(b?.source || "no source")} · ${esc(b?.date || "no date")} · confidence ${esc(b?.confidence || "?")}</span>`;
+const fm = (d) => M.fmtMonth(d);
+const wk = (w) => M.fmtWeek(S.meta, w);
+const money = (v) => M.money(S.meta, v);
+const rate = (v) => (v == null ? "—" : `${S.meta.currency}${v < 10 ? v.toFixed(2) : Math.round(v).toLocaleString("en-IE")}`);
+
+// ------------------------------------------------------------ charts -----
+// Demand (amber) against the capacity staircase.  The staircase is the limit
+// and is the only thing drawn in shu.  Markers: now, decide-by, reach.
+function chart({ demand, capacity, nowW, reachW, decideByW, unit, light = false, height = 260, extra = [] }) {
+  const W = 900, H = height, L = 58, R = 16, T = 18, B = 34;
+  const n = demand.length;
+  const vals = [...demand.filter((v) => v != null), ...capacity];
+  const max = Math.max(...vals) * 1.12 || 1;
+  const x = (w) => L + (w / (n - 1)) * (W - L - R);
+  const y = (v) => T + (1 - v / max) * (H - T - B);
+  const ink = light ? "#111" : "#F3F5F7", mut = light ? "#666" : "#8D97A5", grid = light ? "#ddd" : "#2A3441";
+  const amber = light ? "#111" : "#F2A33C";
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Demand against capacity, ${esc(unit)}">`;
+  for (let i = 0; i <= 4; i++) { const v = (max / 4) * i; s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${grid}" stroke-width="1"/><text x="${L - 8}" y="${y(v) + 4}" fill="${mut}" font-size="11" text-anchor="end" font-family="monospace">${Math.round(v).toLocaleString()}</text>`; }
+  for (let w = 0; w < n; w += 13) { const d = M.weekDate(S.meta, w); s += `<text x="${x(w)}" y="${H - 12}" fill="${mut}" font-size="11" text-anchor="middle">${fm(d)}</text>`; }
+  // capacity staircase — the limit
+  let cp = ""; for (let w = 0; w < n; w++) cp += (w ? " L" : "M") + `${x(w)},${y(capacity[w])}` + (w < n - 1 && capacity[w + 1] !== capacity[w] ? ` L${x(w + 1)},${y(capacity[w])}` : "");
+  s += `<path d="${cp}" fill="none" stroke="#E2472B" stroke-width="${light ? 1.2 : 2}" ${light ? 'stroke-dasharray="4 3"' : ""}/>`;
+  // shortfall shading above the limit
+  let sh = ""; let open = false;
+  for (let w = 0; w < n; w++) { const v = demand[w]; if (v != null && v > capacity[w]) { sh += (open ? " L" : "M") + `${x(w)},${y(v)}`; open = true; } else if (open) { sh += ` L${x(w - 1)},${y(capacity[w - 1])}`; open = false; sh += " Z"; } }
+  if (open) sh += ` L${x(n - 1)},${y(capacity[n - 1])} Z`;
+  if (sh) s += `<path d="${sh}" fill="${light ? "#bbb" : "#E2472B"}" opacity="${light ? .5 : .22}"/>`;
+  // demand
+  let dp = "", started = false;
+  for (let w = 0; w < n; w++) { const v = demand[w]; if (v == null) continue; dp += (started ? " L" : "M") + `${x(w)},${y(v)}`; started = true; }
+  s += `<path d="${dp}" fill="none" stroke="${amber}" stroke-width="2.2"/>`;
+  const mark = (w, label, color, dash) => { if (w == null || w < 0 || w >= n) return ""; return `<line x1="${x(w)}" x2="${x(w)}" y1="${T}" y2="${H - B}" stroke="${color}" stroke-width="1.2" ${dash ? 'stroke-dasharray="3 3"' : ""}/><text x="${x(w) + 4}" y="${T + 10}" fill="${color}" font-size="10.5" font-family="monospace">${esc(label)}</text>`; };
+  s += mark(nowW, "NOW", mut, true);
+  s += mark(decideByW, "DECIDE BY", light ? "#111" : "#F2A33C", true);
+  s += mark(reachW, light ? "REACHED" : "REACH", light ? "#111" : "#F3F5F7", false);
+  for (const e of extra) s += e({ x, y, T, B, H, W, L, R, n });
+  s += `<text x="${W - R}" y="${T + 10}" fill="${mut}" font-size="10.5" text-anchor="end" font-family="monospace">${esc(unit)}</text></svg>`;
+  return s;
+}
+
+// ------------------------------------------------------------- views -----
+function viewOverview() {
+  const pos = M.evaluatePosition(S);
+  const reached = pos.domains.filter((d) => d.status === M.STATUS.REACHED);
+  const passed = pos.domains.filter((d) => d.status === M.STATUS.DECIDE_PASSED);
+  const hgv = pos.domains.find((d) => d.id === "hgv");
+  const eiarTile = pos.eiar.any ? `<div class="card kpi"><div class="k">EIAR peak check</div><div class="v amber">${pos.eiar.workforce.length + pos.eiar.hgv.length} wk</div><div class="s">forecast exceeds assessed peak</div></div>` : `<div class="card kpi"><div class="k">EIAR peak check</div><div class="v">clear</div><div class="s">within assessed peaks</div></div>`;
+  return `
+  <p class="overline">The estate · position ${esc(S.meta.issued)}</p>
+  <h1>${esc(S.meta.name)}. Eight shared services, one headcount curve.</h1>
+  <div class="grid g5">
+    <div class="card kpi"><div class="k">On site now</div><div class="v">${pos.onSiteNow.toLocaleString()}</div><div class="s">peak ${pos.peak.toLocaleString()} · ${fm(M.weekDate(S.meta, pos.peakW))}</div></div>
+    <div class="card kpi"><div class="k">Past their limit</div><div class="v ${reached.length ? "red" : ""}">${reached.length}</div><div class="s">${esc(reached.map((d) => d.name.split(/[ ,&]/)[0]).join(" · ") || "—")}</div></div>
+    <div class="card kpi"><div class="k">Decision dates passed</div><div class="v ${passed.length ? "amber" : ""}">${passed.length}</div><div class="s">${esc(passed.map((d) => d.name.split(/[ ,&]/)[0]).join(" · ") || "—")}</div></div>
+    <div class="card kpi"><div class="k">First wall</div><div class="v">${pos.firstWall ? fm(pos.firstWall.reachDate) : "none"}</div><div class="s">${esc(pos.firstWall?.name || "no curve crosses")}</div></div>
+    ${eiarTile}
+  </div>
+  <h2>Watched monthly — dated off the curve</h2>
+  <div class="grid g4">
+    ${pos.domains.map((d, i) => `
+    <div class="card dom ${cls(d.status)}" data-open="${d.id}" role="button" tabindex="0">
+      <div class="t"><span class="n">${i + 1}&nbsp; ${esc(d.name)}</span><span class="badge ${cls(d.status)}">${esc(d.status)}</span></div>
+      <div class="num">${d.demandNow.toLocaleString()} / ${d.capacityNow.toLocaleString()} <small>${esc(d.unit)}</small></div>
+      <div class="d">${esc(d.reachLabel)} <b>${fm(d.reachDate)}</b>${d.reachW == null ? "" : ` · decide <b>${fm(d.decideByDate)}</b>`}</div>
+      <div class="d" style="margin-top:6px"><span class="tag">${d.cap_type}</span>${d.id === "hgv" && pos.eiar.hgv.length ? ` <span class="badge flag">forecast exceeds assessed peak</span>` : ""}</div>
+    </div>`).join("")}
+  </div>
+  <p class="note" style="margin-top:14px">Every ratio, capacity and rate behind these cards is an input with a provenance marker — see Provenance. All values are synthetic. Click a card to open the domain.</p>`;
+}
+
+function viewDomain() {
+  const pos = M.evaluatePosition(S);
+  const d = S.domains.find((x) => x.id === ui.domain);
+  const e = pos.domains.find((x) => x.id === ui.domain);
+  const routeLead = d.cap_type === "consented" ? (CONSENT_ROUTES[d.consent?.route_to_remedy]?.lead_weeks ?? 0) : 0;
+  const sel = `<select id="domSel">${S.domains.map((x) => `<option value="${x.id}" ${x.id === d.id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select>`;
+  return `
+  <div class="row" style="justify-content:space-between;margin-bottom:14px"><div style="min-width:280px">${sel}</div><span class="badge ${cls(e.status)}">${esc(e.status)}</span></div>
+  <h1>${esc(d.name)} <span class="tag">${d.cap_type} cap</span></h1>
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="card kpi"><div class="k">Demand now</div><div class="v">${e.demandNow.toLocaleString()}</div><div class="s">${esc(d.unit)}</div></div>
+    <div class="card kpi"><div class="k">Capacity now</div><div class="v">${e.capacityNow.toLocaleString()}</div><div class="s">${esc(d.unit)}</div></div>
+    <div class="card kpi"><div class="k">${esc(e.reachLabel)}</div><div class="v ${e.status === M.STATUS.REACHED ? "red" : ""}">${fm(e.reachDate)}</div><div class="s">${e.reachW == null ? "no crossing on this curve" : wk(e.reachW)}</div></div>
+    <div class="card kpi"><div class="k">Decide by</div><div class="v ${e.status === M.STATUS.DECIDE_PASSED ? "amber" : ""}">${fm(e.decideByDate)}</div><div class="s">${e.chosen ? `${esc(e.chosen.name)} · ${e.chosen.lead.total} wk total lead` : "no remedy"}</div></div>
+  </div>
+  <div class="card">${chart({ demand: e.demand, capacity: e.capacity, nowW: e.nowW, reachW: e.reachW, decideByW: e.decideByW, unit: d.unit })}</div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <h3>Ratio — an input, never a constant</h3>
+      <div class="grid g2">
+        <div class="field"><label class="f">Value</label><input type="number" step="any" data-edit="ratio.value" value="${d.ratio.value}"></div>
+        <div class="field"><label class="f">Unit</label><input data-edit="ratio.unit" value="${esc(d.ratio.unit)}"></div>
+        <div class="field"><label class="f">Provenance</label><select data-edit="ratio.basis.provenance">${["statutory", "observed", "assumed"].map((p) => `<option ${d.ratio.basis.provenance === p ? "selected" : ""}>${p}</option>`).join("")}</select></div>
+        <div class="field"><label class="f">Confidence</label><select data-edit="ratio.basis.confidence">${["low", "medium", "high"].map((p) => `<option ${d.ratio.basis.confidence === p ? "selected" : ""}>${p}</option>`).join("")}</select></div>
+        <div class="field" style="grid-column:1/-1"><label class="f">Source</label><input data-edit="ratio.basis.source" value="${esc(d.ratio.basis.source)}"></div>
+        <div class="field"><label class="f">Verified</label><input type="date" data-edit="ratio.basis.date" value="${esc(d.ratio.basis.date)}"></div>
+      </div>
+      <p class="small">${provLine(d.ratio.basis)}</p>
+    </div>
+    <div class="card">
+      <h3>Capacity steps</h3>
+      <table><tr><th>From week</th><th class="num">Capacity</th><th>Provenance</th></tr>
+      ${d.capacity.map((c, i) => `<tr><td><input type="number" data-edit="capacity.${i}.from" value="${c.from}" style="width:90px"> <span class="muted small">${wk(c.from)}</span></td><td class="num"><input type="number" data-edit="capacity.${i}.value" value="${c.value}" style="width:110px;text-align:right"></td><td class="small">${provLine(c.basis)}</td></tr>`).join("")}
+      </table>
+      <h3 style="margin-top:16px">Officer determination</h3>
+      <select data-edit="officer_determination">${OFFICER_DETERMINATION_OPTIONS.map((o) => `<option ${d.officer_determination === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>
+      <p class="note" style="margin-top:6px">Records what a planning officer has determined about a consented cap. The model never fills this in.</p>
+    </div>
+  </div>
+
+  ${d.cap_type === "consented" ? `
+  <div class="card" style="margin-top:14px">
+    <h3>Consented cap</h3>
+    <div class="grid g3">
+      <div class="field"><label class="f">Instrument</label><select data-edit="consent.instrument">${["condition", "CTMP/CEMP", "EIAR assumption", "AA mitigation"].map((o) => `<option ${d.consent.instrument === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></div>
+      <div class="field"><label class="f">Clause reference</label><input data-edit="consent.clause" value="${esc(d.consent.clause)}"></div>
+      <div class="field"><label class="f">Route to remedy</label><select data-edit="consent.route_to_remedy">${Object.entries(CONSENT_ROUTES).map(([k, r]) => `<option value="${k}" ${d.consent.route_to_remedy === k ? "selected" : ""}>${esc(r.label)}</option>`).join("")}</select></div>
+      <div class="field" style="grid-column:1/-1"><label class="f">Cap, quoted verbatim</label><textarea data-edit="consent.quote" style="min-height:64px">${esc(d.consent.quote)}</textarea></div>
+      <div class="field"><label class="f">Lead time from the chosen branch</label><input readonly value="${routeLead} weeks — ${esc(CONSENT_ROUTES[d.consent.route_to_remedy]?.label || "")}"></div>
+      <div class="field"><label class="f">Signed by</label><input data-edit="consent.signed_by" value="${esc(d.consent.signed_by)}"></div>
+      <div class="field"><label class="f">Date</label><input data-edit="consent.signed_date" value="${esc(d.consent.signed_date)}"></div>
+    </div>
+    <p class="small">${provLine(CONSENT_ROUTES[d.consent.route_to_remedy]?.basis)}</p>
+  </div>` : ""}
+
+  <div class="card tbl" style="margin-top:14px">
+    <h3>Fix column — remedies, consent status and the decide-by each implies</h3>
+    <table>
+      <tr><th>Remedy</th><th class="num">Adds</th><th class="num">Build lead</th><th>Consent status</th><th class="num">Consent lead</th>${d.cap_type === "consented" ? '<th class="num">Route lead</th>' : ""}<th class="num">Total lead</th><th>Decide by</th><th class="num">Cost</th><th>Owner</th></tr>
+      ${e.remedies.map((r, i) => `<tr ${e.chosen?.id === r.id ? 'style="background:var(--card2)"' : ""}>
+        <td>${esc(r.name)}${e.chosen?.id === r.id ? ' <span class="tag">quoted</span>' : ""}</td>
+        <td class="num">${r.capacity_add.toLocaleString()}</td>
+        <td class="num"><input type="number" data-edit="remedies.${i}.lead_weeks" value="${r.lead_weeks}" style="width:70px;text-align:right"> wk</td>
+        <td><select data-edit="remedies.${i}.consent">${Object.entries(REMEDY_CONSENT).map(([k, c]) => `<option value="${k}" ${r.consent === k ? "selected" : ""}>${esc(c.label)}</option>`).join("")}</select></td>
+        <td class="num">${r.lead.consent} wk</td>
+        ${d.cap_type === "consented" ? `<td class="num">${r.lead.route} wk</td>` : ""}
+        <td class="num"><b>${r.lead.total} wk</b></td>
+        <td class="mono">${fm(r.decideByDate)}${r.passed ? ' <span class="badge decide">passed</span>' : ""}</td>
+        <td class="num">${money(r.cost)}</td>
+        <td class="small">${esc(r.owner)}</td></tr>`).join("")}
+    </table>
+    <p class="note" style="margin-top:10px">Consent lead comes from the status table; route lead from the cap's branch. Total = build + the longer of the two consent steps. Changing a consent status moves the decide-by date; nothing is typed free-hand.</p>
+  </div>`;
+}
+
+function viewConsent() {
+  const pos = M.evaluatePosition(S);
+  return `
+  <p class="overline">Consent layer</p>
+  <h1>Physical caps and consented caps, kept apart.</h1>
+  <div class="card tbl">
+    <table>
+      <tr><th>Domain</th><th>Cap type</th><th>Instrument</th><th>Cap, verbatim</th><th>Clause</th><th>Route to remedy</th><th class="num">Lead</th><th>Signed by / date</th><th>Cap-reach forecast</th><th>Officer determination</th></tr>
+      ${S.domains.map((d, i) => { const e = pos.domains[i]; const c = d.consent || {}; const r = CONSENT_ROUTES[c.route_to_remedy]; return `<tr>
+        <td><b>${esc(d.name)}</b></td>
+        <td><select data-dom="${d.id}" data-edit="cap_type">${["physical", "consented"].map((o) => `<option ${d.cap_type === o ? "selected" : ""}>${o}</option>`).join("")}</select></td>
+        ${d.cap_type === "consented" ? `
+        <td>${esc(c.instrument)}</td>
+        <td class="small" style="max-width:280px">“${esc(c.quote)}”</td>
+        <td class="small mono">${esc(c.clause)}</td>
+        <td class="small">${esc(r?.label || "—")}</td>
+        <td class="num">${r?.lead_weeks ?? "—"} wk</td>
+        <td class="small">${esc(c.signed_by)} / ${esc(c.signed_date)}</td>
+        <td class="mono">${fm(e.reachDate)}</td>` : `<td colspan="7" class="muted small">physical cap — ${esc(e.reachLabel)} ${fm(e.reachDate)}</td>`}
+        <td class="small">${esc(d.officer_determination)}</td></tr>`; }).join("")}
+    </table>
+    <p class="note" style="margin-top:10px">Switching a domain to consented creates a consent record reading "planning advice required" until it is filled; the lead time is then read from the chosen branch, never typed. Edit the record on the Domain tab.</p>
+  </div>
+  <h2>Lead-time tables</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Route to remedy (consented caps)</h3><table><tr><th>Branch</th><th class="num">Weeks</th><th>Basis</th></tr>${Object.values(CONSENT_ROUTES).map((r) => `<tr><td>${esc(r.label)}</td><td class="num">${r.lead_weeks}</td><td class="small">${provLine(r.basis)}</td></tr>`).join("")}</table></div>
+    <div class="card"><h3>Remedy consent status (fix column)</h3><table><tr><th>Status</th><th class="num">Weeks</th><th>Basis</th></tr>${Object.values(REMEDY_CONSENT).map((r) => `<tr><td>${esc(r.label)}</td><td class="num">${r.lead_weeks}</td><td class="small">${provLine(r.basis)}</td></tr>`).join("")}</table></div>
+  </div>`;
+}
+
+function viewConcurrency() {
+  const pos = M.evaluatePosition(S);
+  const n = pos.headcount.length, W = 900, L = 200, R = 20, rowH = 34, T = 40, H = T + rowH * pos.domains.length + 40;
+  const x = (w) => L + (Math.max(0, Math.min(n - 1, w)) / (n - 1)) * (W - L - R);
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Decide-by to reach windows on one axis">`;
+  for (let w = 0; w < n; w += 13) s += `<line x1="${x(w)}" x2="${x(w)}" y1="${T - 6}" y2="${H - 30}" stroke="#2A3441"/><text x="${x(w)}" y="${H - 12}" fill="#8D97A5" font-size="11" text-anchor="middle">${fm(M.weekDate(S.meta, w))}</text>`;
+  // EIAR exceedance bands
+  const band = (weeks, y0, label) => { if (!weeks.length) return ""; const a = Math.min(...weeks), b = Math.max(...weeks); return `<rect x="${x(a)}" y="${y0}" width="${x(b) - x(a) + 2}" height="8" fill="#F2A33C" opacity=".8"/><text x="${x(a)}" y="${y0 - 3}" fill="#F2A33C" font-size="10" font-family="monospace">${label}</text>`; };
+  s += band(pos.eiar.workforce, 14, "FORECAST EXCEEDS ASSESSED PEAK WORKFORCE");
+  s += band(pos.eiar.hgv, 28, "FORECAST EXCEEDS ASSESSED PEAK HGV/DAY");
+  pos.domains.forEach((d, i) => {
+    const y = T + i * rowH + 12;
+    s += `<text x="${L - 10}" y="${y + 5}" fill="#F3F5F7" font-size="12" text-anchor="end">${i + 1} ${esc(d.name)}</text>`;
+    if (d.reachW == null) { s += `<text x="${x(0) + 4}" y="${y + 4}" fill="#3DBF7F" font-size="10.5" font-family="monospace">no crossing on this curve</text>`; return; }
+    const col = { clear: "#3DBF7F", watch: "#4A82B4", decide: "#F2A33C", reached: "#E5484D" }[cls(d.status)];
+    const a = d.decideByW ?? d.reachW;
+    s += `<rect x="${x(a)}" y="${y - 6}" width="${Math.max(3, x(d.reachW) - x(a))}" height="12" rx="3" fill="${col}" opacity=".85"/>`;
+    s += `<line x1="${x(d.reachW)}" x2="${x(d.reachW)}" y1="${y - 9}" y2="${y + 9}" stroke="#E2472B" stroke-width="2"/>`;
+    if (d.id === "hgv" && pos.eiar.hgv.length) s += `<text x="${x(d.reachW) + 6}" y="${y + 4}" fill="#F2A33C" font-size="10" font-family="monospace">forecast exceeds assessed peak</text>`;
+  });
+  s += `<line x1="${x(pos.nowW)}" x2="${x(pos.nowW)}" y1="${T - 6}" y2="${H - 30}" stroke="#8D97A5" stroke-dasharray="3 3"/><text x="${x(pos.nowW) + 4}" y="${T - 10}" fill="#8D97A5" font-size="10.5" font-family="monospace">NOW</text></svg>`;
+  return `
+  <p class="overline">The collision</p>
+  <h1>Put them on one axis.</h1>
+  <p class="muted" style="margin-bottom:12px">Each bar runs from the decide-by date to the reach date — the window in which a decision is still cheap. The vermilion tick is the limit. Amber bands at the top mark weeks where the forecast exceeds the peaks the environmental assessment was made against.</p>
+  <div class="card">${s}</div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card kpi"><div class="k">EIAR assessed peak workforce</div><div class="v">${S.eiar.peak_workforce.value.toLocaleString()}</div><div class="s">forecast peak ${pos.peak.toLocaleString()} · ${pos.eiar.workforce.length ? `<span style="color:var(--amber)">exceeded in ${pos.eiar.workforce.length} week(s)</span>` : "within"}</div><p class="small" style="margin-top:8px">${provLine(S.eiar.peak_workforce.basis)}</p></div>
+    <div class="card kpi"><div class="k">EIAR assessed peak HGV/day</div><div class="v">${S.eiar.peak_hgv_per_day.value}</div><div class="s">forecast peak ${Math.max(...(pos.domains.find((d) => d.id === "hgv")?.demand || [0]))} · ${pos.eiar.hgv.length ? `<span style="color:var(--amber)">exceeded in ${pos.eiar.hgv.length} week(s)</span>` : "within"}</div><p class="small" style="margin-top:8px">${provLine(S.eiar.peak_hgv_per_day.basis)}</p></div>
+  </div>`;
+}
+
+function viewRebase() {
+  const rb = M.rebase(S);
+  const dW = (v, worseIfPositive) => { if (v == null) return `<span class="muted">—</span>`; if (v === 0) return `<span class="delta">0</span>`; const worse = worseIfPositive ? v > 0 : v < 0; return `<span class="delta ${worse ? "worse" : "better"}">${v > 0 ? "+" : ""}${v}</span>`; };
+  return `
+  <p class="overline">Re-base</p>
+  <h1>What moved since last month.</h1>
+  <p class="muted" style="margin-bottom:12px">Position ${esc(rb.previous)} against position ${esc(rb.issued)}. Headcount peak ${rb.headcount.prevPeak.toLocaleString()} → ${rb.headcount.nowPeak.toLocaleString()} (${fm(M.weekDate(S.meta, rb.headcount.prevPeakW))} → ${fm(M.weekDate(S.meta, rb.headcount.nowPeakW))}). Negative weeks on a reach or decide-by date mean it came closer.</p>
+  <div class="card tbl"><table>
+    <tr><th>Domain</th><th>Reach date, was</th><th>Reach date, now</th><th class="num">Δ wk</th><th>Decide by, was</th><th>Decide by, now</th><th class="num">Δ wk</th><th class="num">Shortfall at peak, was</th><th class="num">now</th><th class="num">Δ</th><th>Status</th></tr>
+    ${rb.rows.map((r) => `<tr>
+      <td><b>${esc(r.name)}</b><br><span class="muted small">${esc(r.reachLabel)} · ${esc(r.unit)}</span></td>
+      <td class="mono">${fm(r.reach.prev)}</td><td class="mono">${fm(r.reach.now)}</td><td class="num">${r.reach.prevNull !== r.reach.nowNull ? `<span class="delta ${r.reach.nowNull ? "better" : "worse"}">${r.reach.nowNull ? "cleared" : "new"}</span>` : dW(r.reach.deltaWeeks, false)}</td>
+      <td class="mono">${fm(r.decideBy.prev)}</td><td class="mono">${fm(r.decideBy.now)}</td><td class="num">${dW(r.decideBy.deltaWeeks, false)}</td>
+      <td class="num">${r.shortfall.prev.toLocaleString()}</td><td class="num">${r.shortfall.now.toLocaleString()}</td><td class="num">${dW(r.shortfall.delta, true)}</td>
+      <td><span class="badge ${cls(r.status.prev)}">${esc(r.status.prev)}</span> → <span class="badge ${cls(r.status.now)}">${esc(r.status.now)}</span></td></tr>`).join("")}
+  </table></div>
+  <p class="note" style="margin-top:10px">Both positions are stored in full and dated; the card is a diff, not a narrative. This is the monthly fee's argument.</p>`;
+}
+
+function viewRetro() {
+  const r = ui.retro;
+  const hits = ui.retroText ? scanText(ui.retroText, { allowReserved: false }) : [];
+  return `
+  <p class="overline">Retrospective</p>
+  <h1>What the record shows you already paid.</h1>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Weekly actuals</h3>
+      <p class="small muted" style="margin-bottom:8px">Paste a CSV or load a sample. Weekly shape: <span class="mono">week, gate_count, canteen_sittings, parking_occupancy, bus_loads, hgv_per_day, beds_booked, wc_installed_demand, laydown_m2</span>. Access-control shape: <span class="mono">timestamp, person_id, gate, direction</span> — aggregated to weekly peak persons on site.</p>
+      <textarea id="retroText" placeholder="week,gate_count,canteen_sittings,...">${esc(ui.retroText)}</textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="loadWeekly">Load weekly sample</button>
+        <button class="btn" id="loadAccess">Load access-control sample</button>
+        <label class="btn" for="retroFile">Choose file…</label><input type="file" id="retroFile" accept=".csv,text/csv" class="hidden">
+        <button class="btn primary" id="rebuild">Rebuild the curves</button>
+      </div>
+      <p class="small" style="margin-top:10px"><b>${esc(summarise(hits))}</b>${hits.length ? ` — ${hits.slice(0, 5).map((h) => `line ${h.line}: ${esc(h.why)} “${esc(h.match)}”`).join("; ")}${hits.length > 5 ? "…" : ""}` : ""}</p>
+    </div>
+    <div class="card">
+      <h3>Client's own rates</h3>
+      <p class="small muted" style="margin-bottom:8px">The cost of the gap is computed at these rates and no others. Each is an input with provenance; overwrite them with your own.</p>
+      <table><tr><th>Domain</th><th class="num">Rate</th><th>Unit</th><th>Provenance</th></tr>
+      ${S.domains.map((d) => `<tr><td>${esc(d.name)}</td><td class="num"><input type="number" step="any" data-dom="${d.id}" data-edit="gap_unit_cost.value" value="${d.gap_unit_cost.value}" style="width:90px;text-align:right"></td><td class="small">${esc(d.gap_unit_cost.unit)}</td><td>${provTag(d.gap_unit_cost.basis)}</td></tr>`).join("")}
+      </table>
+    </div>
+  </div>
+  ${r ? `
+  <h2>Per domain — from the record, not the forecast</h2>
+  <div class="card tbl"><table>
+    <tr><th>Domain</th><th>Column</th><th>Capacity actually reached</th><th>Decide-by that implied</th><th class="num">Weeks over</th><th class="num">Units over, summed</th><th class="num">Rate</th><th class="num">Cost of the gap</th></tr>
+    ${r.rows.map((x) => `<tr><td><b>${esc(x.name)}</b><br><span class="muted small">${esc(x.unit)} · ${x.cap_type}</span></td><td class="mono small">${esc(x.column)}</td>
+      <td class="mono">${x.reachW == null ? '<span class="muted">not reached in record</span>' : `${fm(x.reachDate)}<br><span class="muted small">${wk(x.reachW)}</span>`}</td>
+      <td class="mono">${x.impliedDecideByW == null ? "—" : `${fm(x.impliedDecideByDate)}<br><span class="muted small">${esc(x.chosen?.name)} · ${x.lead.total} wk${x.decideByBeforeRecord ? " · before the record starts" : ""}</span>`}</td>
+      <td class="num">${x.gapWeeks}</td><td class="num">${x.gapUnits.toLocaleString()}</td><td class="num small">${rate(x.rate.value)}<br><span class="muted">${esc(x.rate.unit)}</span></td><td class="num"><b>${money(x.gapCost)}</b></td></tr>`).join("")}
+    <tr><td colspan="7" style="text-align:right"><b>Total cost of the gap, at your rates</b></td><td class="num"><b>${money(r.totalGapCost)}</b></td></tr>
+  </table></div>
+  <div class="grid g2" style="margin-top:14px">
+    ${r.rows.map((x) => `<div class="card"><h3>${esc(x.name)} <span class="tag">actual</span></h3>${chart({ demand: x.actual, capacity: x.capacity, nowW: null, reachW: x.reachW, decideByW: x.impliedDecideByW, unit: x.unit, height: 200 })}</div>`).join("")}
+  </div>
+  <div class="row" style="margin-top:16px"><button class="btn primary" id="exportBtn">Export the Retrospective report (print, light palette)</button><span class="small muted" id="exportNote"></span></div>
+  ` : `<p class="note" style="margin-top:14px">Load a sample or paste actuals, then rebuild. The eight curves are rebuilt from what happened, and each domain gets the date it actually reached capacity, the decide-by date that implied, and the cost of the gap at your rates.</p>`}`;
+}
+
+function viewProvenance() {
+  const rows = [];
+  rows.push({ what: "Headcount curve", value: `${Math.max(...S.headcount.values).toLocaleString()} peak`, unit: "persons", b: S.headcount.basis });
+  rows.push({ what: "EIAR assessed peak workforce", value: S.eiar.peak_workforce.value, unit: S.eiar.peak_workforce.unit, b: S.eiar.peak_workforce.basis });
+  rows.push({ what: "EIAR assessed peak HGV", value: S.eiar.peak_hgv_per_day.value, unit: S.eiar.peak_hgv_per_day.unit, b: S.eiar.peak_hgv_per_day.basis });
+  for (const d of S.domains) {
+    rows.push({ what: `${d.name} — ratio`, value: d.ratio.value, unit: d.ratio.unit, b: d.ratio.basis });
+    d.capacity.forEach((c, i) => rows.push({ what: `${d.name} — capacity step ${i + 1}`, value: c.value, unit: d.unit, b: c.basis }));
+    rows.push({ what: `${d.name} — gap unit cost`, value: d.gap_unit_cost.value, unit: d.gap_unit_cost.unit, b: d.gap_unit_cost.basis });
+  }
+  for (const [k, r] of Object.entries(CONSENT_ROUTES)) rows.push({ what: `Route lead — ${r.label}`, value: r.lead_weeks, unit: "weeks", b: r.basis });
+  for (const [k, r] of Object.entries(REMEDY_CONSENT)) rows.push({ what: `Consent lead — ${r.label}`, value: r.lead_weeks, unit: "weeks", b: r.basis });
+  const count = { statutory: 0, observed: 0, assumed: 0 }; rows.forEach((r) => count[r.b?.provenance] = (count[r.b?.provenance] || 0) + 1);
+  return `
+  <p class="overline">Provenance register</p>
+  <h1>Every figure, its marker, its source, its date.</h1>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card kpi"><div class="k">Statutory</div><div class="v">${count.statutory}</div><div class="s">from the instrument</div></div>
+    <div class="card kpi"><div class="k">Observed</div><div class="v">${count.observed}</div><div class="s">measured on site or quoted for the engagement</div></div>
+    <div class="card kpi"><div class="k">Assumed</div><div class="v amber">${count.assumed}</div><div class="s">stated, with confidence — synthetic in this demo</div></div>
+  </div>
+  <div class="card tbl"><table><tr><th>Figure</th><th class="num">Value</th><th>Unit</th><th>Provenance</th><th>Source</th><th>Verified</th><th>Confidence</th></tr>
+  ${rows.map((r) => `<tr><td>${esc(r.what)}</td><td class="num">${typeof r.value === "number" ? (Number.isInteger(r.value) ? r.value.toLocaleString() : r.value.toFixed(3)) : esc(r.value)}</td><td class="small">${esc(r.unit)}</td><td>${provTag(r.b)}</td><td class="small">${esc(r.b?.source)}</td><td class="mono small">${esc(r.b?.date)}</td><td class="small">${esc(r.b?.confidence)}</td></tr>`).join("")}
+  </table></div>
+  <p class="note" style="margin-top:10px">No ratio in the engine is a constant. Retired figures from an earlier draft are listed in docs/DERIVATION.md and cannot re-enter as sourced.</p>`;
+}
+
+function viewVerify() {
+  const v = verify(S);
+  return `
+  <p class="overline">Verify</p>
+  <h1>${v.ok ? "Position can be issued." : "Position is blocked."} <span class="muted" style="font-size:16px;font-weight:400">${v.counts.block} blocking · ${v.counts.warn} warnings · ${v.counts.info} notes</span></h1>
+  ${v.issues.map((i) => `<div class="issue ${i.level}"><span class="w">${esc(i.level)} · ${esc(i.where)}</span><br>${esc(i.msg)}</div>`).join("")}`;
+}
+
+// ------------------------------------------------------------ report -----
+function buildReport(r) {
+  const meta = S.meta;
+  const fig = (x) => `<div class="fig">${chart({ demand: x.actual, capacity: x.capacity, nowW: null, reachW: x.reachW, decideByW: x.impliedDecideByW, unit: x.unit, light: true, height: 180 })}<div class="cap">${esc(x.name)} — actual (solid) against capacity (dashed limit). ${x.reachW == null ? "Capacity not reached within the record." : `Reached ${fm(x.reachDate)}; decide-by implied ${fm(x.impliedDecideByDate)} against ${esc(x.chosen?.name)} (${x.lead.total} wk lead).`}</div></div>`;
+  return `
+  <h1>Retrospective — ${esc(meta.name)}</h1>
+  <div class="meta">Genkai by DGMO Consultancy · issued ${esc(meta.today)} · ${r.weeks} weeks of actuals from ${esc(meta.week0)} · all data synthetic (demonstration)</div>
+  <h2>Summary</h2>
+  <table><tr><th>Domain</th><th>Capacity actually reached</th><th>Decide-by that implied</th><th class="num">Weeks over</th><th class="num">Units over</th><th class="num">Rate</th><th class="num">Cost of the gap</th></tr>
+  ${r.rows.map((x) => `<tr><td>${esc(x.name)}</td><td>${x.reachW == null ? "not reached" : fm(x.reachDate)}</td><td>${x.impliedDecideByW == null ? "—" : fm(x.impliedDecideByDate)}</td><td class="num">${x.gapWeeks}</td><td class="num">${x.gapUnits.toLocaleString()}</td><td class="num">${rate(x.rate.value)}</td><td class="num">${money(x.gapCost)}</td></tr>`).join("")}
+  <tr><td colspan="6"><b>Total, at the client's own rates</b></td><td class="num"><b>${money(r.totalGapCost)}</b></td></tr></table>
+  <h2>Curves rebuilt from actuals</h2>
+  ${r.rows.map(fig).join("")}
+  <h2>Rates used</h2>
+  <table><tr><th>Domain</th><th class="num">Rate</th><th>Unit</th><th>Provenance</th><th>Source</th><th>Date</th></tr>
+  ${r.rows.map((x) => `<tr><td>${esc(x.name)}</td><td class="num">${rate(x.rate.value)}</td><td>${esc(x.rate.unit)}</td><td>${esc(x.rate.basis.provenance)}</td><td>${esc(x.rate.basis.source)}</td><td>${esc(x.rate.basis.date)}</td></tr>`).join("")}</table>
+  <div class="foot">Capacity-reach dates in this report are read from the record supplied. Decide-by dates are implied by the remedy lead tables in force at issue, including consent steps. Every rate is an input with a provenance marker; nothing is carried across from another programme. DGMO Consultancy Limited.</div>`;
+}
+
+// ------------------------------------------------------------- render -----
+function render() {
+  document.querySelectorAll("[data-panel]").forEach((p) => p.classList.add("hidden"));
+  document.querySelectorAll("#tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === ui.tab ? "true" : "false"));
+  const el = $(`#tab-${ui.tab}`); el.classList.remove("hidden");
+  el.innerHTML = { overview: viewOverview, domain: viewDomain, consent: viewConsent, concurrency: viewConcurrency, rebase: viewRebase, retro: viewRetro, provenance: viewProvenance, verify: viewVerify }[ui.tab]();
+  $("#synBadge").classList.toggle("hidden", !S.meta.synthetic);
+  $("#footStrap").textContent = `${S.meta.name} · ${S.meta.strap}`;
+  bind(el);
+}
+
+function setPath(obj, path, value) {
+  const parts = path.split("."); let o = obj;
+  for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+  o[parts[parts.length - 1]] = value;
+}
+
+function bind(el) {
+  el.querySelectorAll("[data-open]").forEach((c) => { const go = () => { ui.domain = c.dataset.open; ui.tab = "domain"; render(); }; c.addEventListener("click", go); c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") go(); }); });
+  const ds = $("#domSel", el); if (ds) ds.addEventListener("change", () => { ui.domain = ds.value; render(); });
+  el.querySelectorAll("[data-edit]").forEach((inp) => {
+    inp.addEventListener("change", () => {
+      const id = inp.dataset.dom || ui.domain;
+      const d = S.domains.find((x) => x.id === id);
+      let v = inp.type === "number" ? parseFloat(inp.value) : inp.value;
+      if (inp.type === "number" && Number.isNaN(v)) return;
+      if (inp.dataset.edit === "cap_type" && v === "consented" && !d.consent) {
+        d.consent = { instrument: "condition", quote: "", clause: "", route_to_remedy: "agreement_under_condition", signed_by: "planning advice required", signed_date: "planning advice required" };
+      }
+      setPath(d, inp.dataset.edit, v);
+      save();
+      if (ui.retro && ui.retroText) ui.retro = rebuildRetro(ui.retroText);
+      render();
+    });
+  });
+  const ta = $("#retroText", el); if (ta) ta.addEventListener("input", () => { ui.retroText = ta.value; });
+  const lw = $("#loadWeekly", el); if (lw) lw.addEventListener("click", () => { ui.retroText = sampleActualsCsv(); ui.retro = null; render(); });
+  const la = $("#loadAccess", el); if (la) la.addEventListener("click", () => { ui.retroText = sampleAccessControlCsv(); ui.retro = null; render(); });
+  const rf = $("#retroFile", el); if (rf) rf.addEventListener("change", () => { const f = rf.files[0]; if (!f) return; f.text().then((t) => { ui.retroText = t; ui.retro = null; render(); }); });
+  const rb = $("#rebuild", el); if (rb) rb.addEventListener("click", () => { ui.retro = rebuildRetro(ui.retroText); render(); });
+  const ex = $("#exportBtn", el); if (ex) ex.addEventListener("click", () => {
+    const v = verify(S);
+    const hits = scanText(JSON.stringify(ui.retro.rows.map((x) => x.name)), { allowReserved: true });
+    if (!v.ok) { $("#exportNote", el).textContent = `export blocked — ${v.counts.block} blocking issue(s) on the Verify tab`; return; }
+    if (hits.length) { $("#exportNote", el).textContent = `export blocked — ${summarise(hits)}`; return; }
+    $("#report").innerHTML = buildReport(ui.retro);
+    window.print();
+  });
+}
+
+function rebuildRetro(text) {
+  const p = M.parseCsv(text);
+  const shape = M.detectShape(p.headers);
+  if (shape === "access") {
+    const weekly = M.accessToWeekly(p.rows, S.meta);
+    // An access-control export carries one thing: people on site.  The record
+    // gives the headcount; the current ratios turn it into the domain curves.
+    const rows = weekly.map((w) => { const h = parseFloat(w.on_site_peak); const o = { week: w.week }; for (const [col, id] of Object.entries(M.ACTUAL_COLUMNS)) { const d = S.domains.find((x) => x.id === id); o[col] = String(Math.round(h * d.ratio.value)); } return o; });
+    const r = M.retrospective(S, rows);
+    r.note = "access-control shape: weekly peak persons on site × current ratios";
+    return r;
+  }
+  if (shape !== "weekly") return { rows: [], weeks: 0, totalGapCost: 0 };
+  return M.retrospective(S, p.rows);
+}
+
+document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => { ui.tab = b.dataset.tab; render(); }));
+$("#resetBtn").addEventListener("click", reset);
+render();
+</script>
+</body>
+</html>
