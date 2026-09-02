@@ -1,0 +1,21 @@
+name: leakscan
+
+# Fails the build if anything shippable names or implies a client, site,
+# engagement or identifying rate.  Rules live in scripts/leakscan.mjs.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  leakscan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Scan shippable files
+        run: node scripts/leakscan.mjs
