@@ -9,6 +9,7 @@ labelled as such in the UI.
 |---|---|
 | 2026-08-30 | Site renamed Genkai. Demo brief written naming `genkai/scenario.html`, `middleware.js`, `verify.js`, `leakscan.js`. None existed at that point. |
 | 2026-09-02 | Demo built from scratch as described below. Repository scanner (`scripts/leakscan.mjs`) written first and wired into CI so no commit can carry an identifying figure. |
+| 2026-09-02 | Film re-cut by `scripts/make-film.py`, which computes its figures from the same synthetic scenario as the demo, so the two cannot disagree. The previous cut used the planning officer's word in its chart labels. The existing score was muxed back on unchanged; the poster is frame 222 of the new cut. |
 
 ## Files
 
@@ -20,6 +21,7 @@ labelled as such in the UI.
 | `genkai/leakscan.js` | Browser-side, pattern-only identifier check run over pasted CSVs and exports. Holds no lists of names. |
 | `genkai/scenario.html` | The UI. Dark on screen; the Retrospective report prints in a light palette. |
 | `scripts/leakscan.mjs` | Repository scanner with the specific rules. Runs in CI on push and pull request. |
+| `scripts/make-film.py` | Renders `assets/genkai-film-1080p.mp4` and `assets/genkai-poster.jpg` from the scenario above. Ten scenes, 55.30s, 1920x1080 at 30fps. |
 
 ## Terminology
 
